@@ -11,6 +11,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 
 from django.core.exceptions import PermissionDenied
+from vendor.models import Vendor
 
 # Restrict vendor from accessing customer page
 def check_role_vendor(user):
@@ -169,6 +170,7 @@ def customerDashboard(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def vendorDashboard(request):
+    vendor = Vendor.objects.get(user=request.user)
     return render(request, 'accounts/vendorDashboard.html')
 
 def forgot_password(request):
