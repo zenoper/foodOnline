@@ -156,4 +156,4 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'foodOnline Marketplace <onlinefood.django@gmail.com>'
 
 #GOOGLE API
-GOOGLE_API_KEY = 'AIzaSyB790YpyANi8i8eptU714Gthgimcynes5Q'
+GOOGLE_API_KEY = config('GOOGLE_API_KEY')
