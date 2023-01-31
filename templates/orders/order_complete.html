@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <div class="justify-content-center row">
+        <div class="col-md-8">
+            <div class="bg-white p-3">
+                <img src="{% static 'logo/foodOnlineLogo.png' %}" alt="foodOnline Logo" width="300">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="mt-2 mb-3">Thank you for your order!</h4>
+                    </div>
+
+                    <div class="col-md-6">
+                        <p class="mb-0">{{ form.first_name }}</p>
+                    </div>
+                </div>
+                
+                <hr>
+                <p>As this is a personal project, I didn't completely include the payment process. This page shows that you have paid for the items you ordered and the delivery is on the way :)</p>
+
+                <div class="menu-itam-holder">
+
+                    <div class="row">
+                        <div class="d-flex  justify-content-center col-md-6">
+                            <img src="{% static 'images/paid.png' %}" width="180">
+                        </div>
+                    </div>
+
+                    <div>
+                        <br>
+                        <a href="{% url 'home' %}" class="btn btn-primary w-100 p-2 mt-3">GO TO MAIN PAGE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
