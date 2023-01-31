@@ -5,4 +5,5 @@ from . import views
 urlpatterns = [
     path('', AccountViews.customerDashboard, name='customer'),
     path('profile/', views.cprofile, name='cprofile'),
+    path('my_orders/', views.my_orders, name='my_orders'),
 ]
