@@ -12,6 +12,7 @@ from menu.forms import CategoryForm, FoodItemForm
 from django.template.defaultfilters import slugify
 from django.http import HttpResponse, JsonResponse
 from django.db import IntegrityError
+from orders.models import Order
 
 
 def get_vendor(request):
@@ -224,3 +225,12 @@ def remove_open_hours(request, pk=None):
             hour = get_object_or_404(OpenHours, pk=pk)
             hour.delete()
             return JsonResponse({'status': 'success', 'id': pk})
+        
+def my_orders(request):
+    vendor = Vendor.objects.get(user=request.user)
+    orders = Order.objects.filter(vendors__in=[vendor.id]).order_by('-created_at')
+
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'vendor/my_orders.html', context)

@@ -6,6 +6,8 @@ from marketplace.context_processors import get_cart_amount
 from .utils import generate_order_number
 from django.contrib.auth.decorators import login_required
 from accounts.models import UserProfile
+from menu.models import FoodItem
+import json
 
 # Create your views here.
 
@@ -15,6 +17,29 @@ def place_order(request):
     cart_count = cart_items.count()
     if cart_count <= 0:
         return redirect('marketplace')
+    
+    vendor_ids = []
+
+    for i in cart_items:
+        if i.fooditem.vendor.id not in vendor_ids:
+            vendor_ids.append(i.fooditem.vendor.id)
+
+    subtotal = 0
+    k = {}
+    total_data = {}
+    for i in cart_items:
+        fooditem = FoodItem.objects.get(pk=i.fooditem.id, vendor_id__in=vendor_ids)
+        v_id = fooditem.vendor.id
+        if v_id in k:    
+            subtotal = k[v_id]
+            subtotal += (fooditem.price * i.quantity)
+            k[v_id] = subtotal
+        else:
+            subtotal = (fooditem.price * i.quantity)
+            k[v_id] = subtotal
+    
+        total_data.update({fooditem.vendor.id: str(subtotal)})
+
     
     grand_total = get_cart_amount(request)['grand_total']
     
@@ -33,12 +58,15 @@ def place_order(request):
             order.pin_code = form.cleaned_data['pin_code']
             order.user = request.user
             order.total = grand_total
+            order.total_data = json.dumps(total_data)
             order.save()
             order.order_number = generate_order_number(order.id)
+            order.vendors.add(*vendor_ids)
             order.save()
             context = {
                 'order': order,
                 'cart_items': cart_items,
+                'total_data': total_data,
             }
             return render(request, 'orders/place_order.html', context)
         else:
